@@ -8,6 +8,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import "./env"; // Validates environment variables immediately on startup
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {

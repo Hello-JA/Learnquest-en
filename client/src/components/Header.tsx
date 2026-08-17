@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -42,6 +44,12 @@ export default function Header() {
           >
             Benefits
           </button>
+  <button
+    onClick={() => setLocation("/pricing")}
+    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+  >
+    Pricing
+  </button>
           <button
             onClick={() => scrollToSection("faq")}
             className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
