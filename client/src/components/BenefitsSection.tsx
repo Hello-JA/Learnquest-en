@@ -1,6 +1,6 @@
 export default function BenefitsSection() {
   return (
-    <section id="benefits" className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+    <section id="benefits" className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white scroll-mt-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Designed for Everyone</h2>
@@ -10,9 +10,10 @@ export default function BenefitsSection() {
         {/* Collaboration Image */}
         <div className="mb-12">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663583729031/XDDRwnHgGWQp3VXWLqVt2K/benefits-collaboration-V7NXD2wGAB9jH2Lk7R6mnR.webp"
+            src="/images/collaboration.jpg"
             alt="Collaboration between students, parents, and teachers"
-            className="w-full rounded-2xl shadow-lg"
+            loading="lazy"
+            className="w-full max-h-[420px] object-cover rounded-2xl shadow-lg"
           />
         </div>
 

@@ -8,21 +8,31 @@ export default function Header() {
   const [, setLocation] = useLocation();
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Section lives on the home page — navigate there and let the browser
+      // jump to the anchor (used when nav is clicked from /pricing).
+      window.location.href = `/#${id}`;
+    }
   };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <button
+          onClick={() => scrollToSection("hero")}
+          className="flex items-center gap-2 focus:outline-none"
+          aria-label="Go to top"
+        >
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">LQ</span>
           </div>
           <span className="font-bold text-xl text-gray-900 hidden sm:inline">LearnQuest</span>
-        </div>
+        </button>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
@@ -44,12 +54,12 @@ export default function Header() {
           >
             Benefits
           </button>
-  <button
-    onClick={() => setLocation("/pricing")}
-    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-  >
-    Pricing
-  </button>
+          <button
+            onClick={() => setLocation("/pricing")}
+            className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+          >
+            Pricing
+          </button>
           <button
             onClick={() => scrollToSection("faq")}
             className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
@@ -61,7 +71,7 @@ export default function Header() {
         {/* CTA Button */}
         <div className="hidden md:block">
           <Button
-            onClick={() => scrollToSection("register")}
+            onClick={() => setLocation("/pricing")}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition-all hover:shadow-lg"
           >
             Get Started
@@ -103,13 +113,25 @@ export default function Header() {
             Benefits
           </button>
           <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setLocation("/pricing");
+            }}
+            className="block w-full text-left text-gray-700 hover:text-blue-600 py-2 font-medium"
+          >
+            Pricing
+          </button>
+          <button
             onClick={() => scrollToSection("faq")}
             className="block w-full text-left text-gray-700 hover:text-blue-600 py-2 font-medium"
           >
             FAQ
           </button>
           <Button
-            onClick={() => scrollToSection("register")}
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setLocation("/pricing");
+            }}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg mt-2"
           >
             Get Started

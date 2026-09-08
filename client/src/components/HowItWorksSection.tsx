@@ -1,6 +1,6 @@
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-16 md:py-24 bg-white">
+    <section id="how-it-works" className="py-16 md:py-24 bg-white scroll-mt-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Your Learning Journey</h2>
@@ -10,9 +10,10 @@ export default function HowItWorksSection() {
         {/* How It Works Image */}
         <div className="mb-12">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663583729031/XDDRwnHgGWQp3VXWLqVt2K/how-it-works-journey-eC4yvaZxAXsyHbMTScYpYq.webp"
+            src="/images/how-it-works.jpg"
             alt="How LearnQuest works"
-            className="w-full rounded-2xl shadow-lg"
+            loading="lazy"
+            className="w-full max-h-[420px] object-cover rounded-2xl shadow-lg"
           />
         </div>
 
@@ -46,7 +47,7 @@ export default function HowItWorksSection() {
           ].map((item) => (
             <div key={item.step} className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
               <div className="text-5xl mb-4">{item.icon}</div>
-              <div className="inline-block bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold mb-4">
+              <div className="mx-auto bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold mb-4">
                 {item.step}
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>

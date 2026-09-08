@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { createRegistration } from "./db";
-import { notifyOwner } from "./_core/notification";
+import { sendOwnerEmail } from "./_core/email";
 
 export const appRouter = router({
   system: systemRouter,
@@ -30,19 +30,31 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         try {
-          // Save to database
-          await createRegistration({
-            name: input.name,
-            email: input.email,
-            role: input.role,
-          });
+          // Save to database (best-effort — a missing/unreachable DB must not
+          // block the owner notification, which is how leads are actually seen).
+          try {
+            await createRegistration({
+              name: input.name,
+              email: input.email,
+              role: input.role,
+            });
+          } catch (dbError) {
+            console.error("[Registration] DB write failed, continuing:", dbError);
+          }
 
-          // Send email notification to owner
-          const emailContent = `New Registration Submission\n\nName: ${input.name}\nEmail: ${input.email}\nRole: ${input.role}\n\nPlease follow up with this prospect.`;
-          
-          await notifyOwner({
-            title: "New LearnQuest Registration",
-            content: emailContent,
+          // Notify the site owner by email.
+          await sendOwnerEmail({
+            subject: `New LearnQuest registration: ${input.name}`,
+            text: [
+              `New registration from the sign-up form.`,
+              ``,
+              `Name:  ${input.name}`,
+              `Email: ${input.email}`,
+              `Role:  ${input.role}`,
+              ``,
+              `Reply to this email to follow up with them directly.`,
+            ].join("\n"),
+            replyTo: input.email,
           });
 
           return {
@@ -52,6 +64,38 @@ export const appRouter = router({
         } catch (error) {
           console.error("Registration error:", error);
           throw new Error("Failed to process registration. Please try again.");
+        }
+      }),
+
+    waitlist: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email("Valid email is required"),
+          plan: z.string().min(1, "Plan is required"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          await sendOwnerEmail({
+            subject: `Plan interest: ${input.plan}`,
+            text: [
+              `Someone asked to be notified about the "${input.plan}" plan from the pricing page.`,
+              ``,
+              `Email: ${input.email}`,
+              `Plan:  ${input.plan}`,
+              ``,
+              `Reply to this email to reach out to them.`,
+            ].join("\n"),
+            replyTo: input.email,
+          });
+
+          return {
+            success: true,
+            message: "You're on the list! We'll email you when it's ready.",
+          };
+        } catch (error) {
+          console.error("Waitlist error:", error);
+          throw new Error("Failed to join the waitlist. Please try again.");
         }
       }),
   }),

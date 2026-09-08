@@ -9,6 +9,18 @@ function getQueryParam(req: Request, key: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+function isValidCallbackState(req: Request, state: string): boolean {
+  try {
+    const redirectUri = Buffer.from(state, "base64").toString("utf8");
+    const forwardedProto = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+    const protocol = forwardedProto || req.protocol;
+    const expected = `${protocol}://${req.get("host")}/api/oauth/callback`;
+    return redirectUri === expected;
+  } catch {
+    return false;
+  }
+}
+
 export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
@@ -16,6 +28,11 @@ export function registerOAuthRoutes(app: Express) {
 
     if (!code || !state) {
       res.status(400).json({ error: "code and state are required" });
+      return;
+    }
+
+    if (!isValidCallbackState(req, state)) {
+      res.status(400).json({ error: "Invalid OAuth state" });
       return;
     }
 

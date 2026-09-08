@@ -2,7 +2,7 @@ import { Zap, Target, Users, TrendingUp } from "lucide-react";
 
 export default function FeaturesSection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section id="features" className="py-16 md:py-24 bg-white scroll-mt-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Key Features</h2>
@@ -49,9 +49,10 @@ export default function FeaturesSection() {
         {/* Gamification Elements Image */}
         <div className="mt-12 md:mt-16">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663583729031/XDDRwnHgGWQp3VXWLqVt2K/gamification-elements-jyXF6avvzS2YZkHsD8R4fF.webp"
+            src="/images/gamification.jpg"
             alt="Gamification elements"
-            className="w-full rounded-2xl shadow-lg"
+            loading="lazy"
+            className="w-full max-h-[420px] object-cover rounded-2xl shadow-lg"
           />
         </div>
       </div>

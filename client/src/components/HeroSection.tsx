@@ -21,18 +21,6 @@ export default function HeroSection({ onCTAClick }: HeroSectionProps) {
               </p>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 py-4">
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                <div className="text-2xl md:text-3xl font-bold text-blue-600">10K+</div>
-                <p className="text-sm text-gray-600">Active Students</p>
-              </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                <div className="text-2xl md:text-3xl font-bold text-orange-500">95%</div>
-                <p className="text-sm text-gray-600">Satisfaction Rate</p>
-              </div>
-            </div>
-
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
@@ -48,8 +36,9 @@ export default function HeroSection({ onCTAClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="relative h-96 md:h-full">
             <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663583729031/XDDRwnHgGWQp3VXWLqVt2K/hero-students-learning-2DMzLacoo8oSZ5QbyPhfcd.webp"
+              src="/images/hero-students.jpg"
               alt="Students learning with gamification"
+              loading="eager"
               className="w-full h-full object-cover rounded-2xl shadow-xl"
             />
             {/* Floating Badge */}

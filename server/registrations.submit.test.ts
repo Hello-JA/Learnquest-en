@@ -7,8 +7,8 @@ vi.mock("./db", () => ({
   createRegistration: vi.fn().mockResolvedValue({ success: true }),
 }));
 
-vi.mock("./_core/notification", () => ({
-  notifyOwner: vi.fn().mockResolvedValue(true),
+vi.mock("./_core/email", () => ({
+  sendOwnerEmail: vi.fn().mockResolvedValue(true),
 }));
 
 function createPublicContext(): TrpcContext {
