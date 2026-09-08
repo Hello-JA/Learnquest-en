@@ -18,13 +18,15 @@ const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
-app.use(
-  "/api/trpc",
-  createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  })
-);
+const trpcMiddleware = createExpressMiddleware({
+  router: appRouter,
+  createContext,
+});
+
+// Depending on how Vercel forwards the rewritten path, the function may see the
+// original "/api/trpc/..." or a stripped "/trpc/..." — mount both.
+app.use("/api/trpc", trpcMiddleware);
+app.use("/trpc", trpcMiddleware);
 
 // Anything else under /api that reaches this function is unknown.
 app.use((_req, res) => {
