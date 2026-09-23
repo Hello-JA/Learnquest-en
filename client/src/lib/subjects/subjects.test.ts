@@ -1,13 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { SUBJECTS, getSubject, shuffleChoices, type Challenge } from "./index";
 import { READING_SETS } from "./reading";
-import { SCIENCE_QUESTIONS } from "./science";
 import { HISTORY_QUESTIONS } from "./history";
 
 /** Every authored challenge, before shuffling. */
 const AUTHORED: Omit<Challenge, "seconds">[] = [
   ...READING_SETS.flatMap((s) => s.questions),
-  ...SCIENCE_QUESTIONS,
   ...HISTORY_QUESTIONS,
 ];
 
@@ -117,10 +115,10 @@ describe("shuffleChoices", () => {
 });
 
 describe("subjects", () => {
-  it("exposes four subjects with unique ids", () => {
-    expect(SUBJECTS).toHaveLength(4);
+  it("exposes three subjects with unique ids", () => {
+    expect(SUBJECTS).toHaveLength(3);
     const ids = SUBJECTS.map((s) => s.id);
-    expect(new Set(ids).size).toBe(4);
+    expect(new Set(ids).size).toBe(3);
   });
 
   it("builds a usable round for every subject", () => {
@@ -180,7 +178,7 @@ describe("subjects", () => {
     // would be trivially gameable.
     const positions = new Set<number>();
     for (let i = 0; i < 60; i++) {
-      for (const c of getSubject("science").buildRound()) {
+      for (const c of getSubject("history").buildRound()) {
         positions.add(c.answerIndex);
       }
     }

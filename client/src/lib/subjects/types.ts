@@ -1,7 +1,7 @@
 /**
  * Shared shape for every demo subject.
  *
- * Multiplication questions are generated; reading, science and history
+ * Multiplication questions are generated; reading and history
  * questions are authored. Both produce a Challenge so the demo page can render
  * them with one code path.
  *
@@ -47,7 +47,7 @@ export type Challenge = {
   visual?: { rows: number; cols: number };
 };
 
-export type SubjectId = "math" | "reading" | "science" | "history";
+export type SubjectId = "math" | "reading" | "history";
 
 export type Subject = {
   id: SubjectId;
