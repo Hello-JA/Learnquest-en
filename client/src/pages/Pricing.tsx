@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
 
 const plans = [
@@ -102,8 +103,8 @@ export default function Pricing() {
                 Simple, Transparent Pricing
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Choose the perfect plan for your learning journey. Every plan includes full
-                access to our gamified learning platform.
+                The plans we intend to offer when LearnQuest launches. Nothing is for
+                sale yet — join the waitlist and we will let you know when it is.
               </p>
             </div>
 
@@ -174,9 +175,14 @@ export default function Pricing() {
               ))}
             </div>
 
-            <p className="text-center text-sm text-gray-500 mt-12">
-              Prices in USD. No credit card required to start.
-            </p>
+            <div className="max-w-2xl mx-auto mt-12 bg-amber-50 border border-amber-200 rounded-xl p-5 text-center">
+              <p className="text-sm text-gray-800">
+                <strong>LearnQuest is not yet available for purchase.</strong> The
+                prices above are indicative, are not an offer to sell, and may change
+                before launch. Joining the waitlist costs nothing, reserves nothing and
+                obliges you to nothing.
+              </p>
+            </div>
           </div>
         </section>
       </main>
@@ -222,6 +228,16 @@ export default function Pricing() {
                     className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition"
                   />
                 </div>
+
+                <p className="mt-3 text-xs text-gray-500 leading-relaxed">
+                  We will use your address only to tell you when LearnQuest launches —
+                  nothing else, and we will not pass it on. Please use an adult&rsquo;s
+                  email address. You can ask us to delete it at any time. See our{" "}
+                  <Link href="/privacy" className="text-blue-600 hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
 
                 {error && (
                   <p className="mt-3 text-sm text-red-600">{error}</p>

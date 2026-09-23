@@ -167,6 +167,10 @@ export default function Demo() {
                     <p className="text-sm text-gray-500 mt-4">
                       {ROUND_LENGTH} questions · about 3 minutes · nothing to sign up for
                     </p>
+                    <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto">
+                      This demo runs entirely in your browser. Your answers are not
+                      recorded, stored or sent anywhere.
+                    </p>
                   </div>
                 </>
               )}

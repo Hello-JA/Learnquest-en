@@ -1,10 +1,11 @@
 import { Link } from "wouter";
+import { PRELAUNCH_NOTICE } from "@/lib/legal";
 
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           {/* Brand */}
           <div className="max-w-sm">
             <div className="flex items-center gap-2 mb-3">
@@ -32,14 +33,24 @@ export default function Footer() {
             <a href="/#faq" className="hover:text-blue-400 transition-colors">
               FAQ
             </a>
-            <Link href="/pricing" className="hover:text-blue-400 transition-colors">
-              Get Started
+            <Link href="/privacy" className="hover:text-blue-400 transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-blue-400 transition-colors">
+              Terms
             </Link>
           </nav>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6">
-          <p className="text-sm text-gray-400">
+        <div className="border-t border-gray-800 mt-8 pt-6 space-y-3">
+          {/* Pre-launch disclaimer — the site describes planned features. */}
+          <p className="text-sm text-gray-400 max-w-3xl">
+            <span className="font-semibold text-gray-300">Please note:</span>{" "}
+            {PRELAUNCH_NOTICE} Prices shown are indicative and are not an offer to
+            sell. The practice demo is an illustration of our teaching approach, not
+            an assessment, and it stores no information.
+          </p>
+          <p className="text-sm text-gray-500">
             © {new Date().getFullYear()} LearnQuest. All rights reserved.
           </p>
         </div>

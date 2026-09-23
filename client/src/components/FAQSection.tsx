@@ -1,31 +1,41 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Link } from "wouter";
 
 export default function FAQSection() {
+  // NOTE: LearnQuest is pre-launch. Answers here describe what exists today
+  // versus what is planned — avoid present-tense claims about unbuilt
+  // features, and never assert a compliance status we have not implemented.
   const faqs = [
     {
       question: "How does gamification work in LearnQuest?",
-      answer: "LearnQuest uses game elements like points, levels, challenges, and achievements to make learning more motivating. Each correct action earns points, and as students accumulate points, they level up and unlock new challenges."
+      answer:
+        "LearnQuest is built around game elements like points, levels, challenges and streaks. Crucially, points are earned for understanding rather than guessing: every answer is followed by the reasoning behind it, and hints point to a strategy without giving the answer away. You can try this for yourself in our free demo.",
     },
     {
-      question: "What subjects are available?",
-      answer: "We currently offer Math, Languages (English, Spanish), Science, and Social Studies. We're constantly expanding our subject catalog."
+      question: "What subjects will be available?",
+      answer:
+        "LearnQuest is still in development. The demo available today covers multiplication. At launch we plan to cover Math, Languages (English and Spanish), Science and Social Studies, and to expand from there. Subjects are not final and may change.",
     },
     {
       question: "Is it safe for children?",
-      answer: "Yes, safety is our priority. LearnQuest complies with COPPA and other child privacy regulations. Data is encrypted and we don't share information with third parties."
+      answer:
+        "Today, the demo is the safest part of the site: it runs entirely in your browser, requires no sign-up, and stores and transmits nothing. We are not yet operating a service that collects information from children. The waitlist is intended for adults, and we do not knowingly collect personal information from anyone under 13. Before we launch anything children use directly, we will put verifiable parental consent and our other COPPA obligations in place. Our Privacy Policy sets out exactly what we collect today.",
     },
     {
-      question: "Can I see my child's progress?",
-      answer: "Absolutely. Parents have access to a dashboard where they can see progress, achievements, time spent, and improvement areas for their children in real-time."
+      question: "Will I be able to see my child's progress?",
+      answer:
+        "That is the plan. We intend to give parents a dashboard showing progress, achievements, time spent and areas needing work. This is not built yet, and nothing described here is available today.",
     },
     {
-      question: "How much does it cost?",
-      answer: "We offer a free plan with limited access and premium plans with more content and features. You can start free without needing a credit card."
+      question: "How much will it cost?",
+      answer:
+        "We intend to offer a free plan alongside paid plans with more content and features. The prices shown on our pricing page are indicative only, are not an offer to sell, and may change before launch. Nothing is for sale yet and we are not accepting payment.",
     },
     {
       question: "Do I need to be a teacher to use LearnQuest?",
-      answer: "No, LearnQuest is designed for students, parents, and teachers. Anyone can sign up and start learning. If you're a teacher, you have access to additional customization tools."
-    }
+      answer:
+        "No. LearnQuest is being designed for students, parents and teachers alike, with extra customization tools planned for teachers. Sign-ups are not open yet, but you can try the demo now and join the waitlist to hear when we launch.",
+    },
   ];
 
   return (
@@ -49,6 +59,18 @@ export default function FAQSection() {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <p className="text-center text-sm text-gray-500 mt-8">
+            LearnQuest is in development and not yet available for purchase. See our{" "}
+            <Link href="/privacy" className="text-blue-600 hover:underline">
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link href="/terms" className="text-blue-600 hover:underline">
+              Terms
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </section>
