@@ -3,8 +3,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
-import { isStaticPreview } from '@/lib/basePath';
-import { LEGAL_CONTACT_EMAIL } from '@/lib/legal';
 
 const plans = [
   {
@@ -204,39 +202,7 @@ export default function Pricing() {
               </svg>
             </button>
 
-            {isStaticPreview ? (
-              /* Static preview (GitHub Pages) has no backend to submit to, so
-                 say that rather than letting the form fail with a network error. */
-              <div className="py-4">
-                <h3 className="text-2xl font-bold text-gray-900">Coming Soon!</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  Our team is working hard to finish this product.
-                </p>
-                <p className="mt-4 text-sm font-semibold text-gray-800">
-                  Selected Plan: <span className="text-blue-600">{selectedPlan}</span>
-                </p>
-                <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-800">
-                    This is a preview of the site, so the waitlist form is not
-                    connected yet. To be notified, email us at{" "}
-                    <a
-                      href={`mailto:${LEGAL_CONTACT_EMAIL}`}
-                      className="text-blue-600 hover:underline font-semibold"
-                    >
-                      {LEGAL_CONTACT_EMAIL}
-                    </a>
-                    .
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="mt-6 w-full py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition"
-                >
-                  Close
-                </button>
-              </div>
-            ) : submitted ? (
+            {submitted ? (
               <div className="text-center py-6">
                 <h3 className="text-2xl font-bold text-gray-900">You're on the list! 🎉</h3>
                 <p className="mt-2 text-gray-600">We'll notify you as soon as {selectedPlan} is ready.</p>
