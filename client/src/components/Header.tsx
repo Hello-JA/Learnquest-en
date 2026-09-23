@@ -55,6 +55,12 @@ export default function Header() {
             Benefits
           </button>
           <button
+            onClick={() => setLocation("/demo")}
+            className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+          >
+            Try Demo
+          </button>
+          <button
             onClick={() => setLocation("/pricing")}
             className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
           >
@@ -111,6 +117,15 @@ export default function Header() {
             className="block w-full text-left text-gray-700 hover:text-blue-600 py-2 font-medium"
           >
             Benefits
+          </button>
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setLocation("/demo");
+            }}
+            className="block w-full text-left text-gray-700 hover:text-blue-600 py-2 font-medium"
+          >
+            Try Demo
           </button>
           <button
             onClick={() => {

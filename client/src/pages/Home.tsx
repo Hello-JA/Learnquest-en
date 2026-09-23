@@ -14,7 +14,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-1">
-        <HeroSection onCTAClick={() => setLocation("/pricing")} />
+        <HeroSection onCTAClick={() => setLocation("/demo")} />
         <HowItWorksSection />
         <BenefitsSection />
         <FeaturesSection />

@@ -27,7 +27,7 @@ export default function HeroSection({ onCTAClick }: HeroSectionProps) {
                 onClick={onCTAClick}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-lg"
               >
-                Start Free
+                Try a Free Challenge
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </div>

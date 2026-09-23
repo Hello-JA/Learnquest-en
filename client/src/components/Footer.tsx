@@ -20,6 +20,9 @@ export default function Footer() {
 
           {/* Quick links */}
           <nav className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+            <Link href="/demo" className="hover:text-blue-400 transition-colors">
+              Try Demo
+            </Link>
             <a href="/#features" className="hover:text-blue-400 transition-colors">
               Features
             </a>
