@@ -21,6 +21,8 @@ export type Question = {
   product: number;
   choices: number[];
   strategy: Strategy;
+  /** Thinking time allowed for this fact, in seconds. */
+  seconds: number;
 };
 
 export type MissedFact = { a: number; b: number; strategy: Strategy };
@@ -42,6 +44,34 @@ export const shuffle = <T,>(arr: T[]): T[] => {
   }
   return copy;
 };
+
+/**
+ * Extra time granted when a child opens a hint. Reading the hint and then
+ * applying it takes longer than recalling a fact, and we never want the clock
+ * to make asking for help feel like a penalty.
+ */
+export const HINT_BONUS_SECONDS = 10;
+
+/**
+ * Thinking time for a fact, scaled to how much work it actually takes.
+ *
+ * These are deliberately generous. The tiers mirror the strategy tiers below:
+ * a one-step trick, a slightly longer single step, and the 6/7/8 facts that
+ * need decomposing into two steps. Time still has to cover reading the
+ * question and four options before any thinking starts.
+ */
+export function secondsFor(a: number, b: number): number {
+  const [small, large] = a <= b ? [a, b] : [b, a];
+
+  // One-step tricks: identity, doubling, half-of-ten, place value.
+  if (small === 1 || small === 2 || small === 5 || large === 10) return 12;
+
+  // Single step, but more to hold in mind: triples, double-twice, ten-minus-one.
+  if (small === 3 || small === 4 || large === 9) return 16;
+
+  // 6, 7 and 8 against each other — needs breaking into two easier facts.
+  return 20;
+}
 
 /**
  * Picks the most useful mental strategy for a fact. Order matters: the
@@ -184,5 +214,6 @@ export function makeQuestion(index: number): Question {
     product: p,
     choices: shuffle([p, ...wrong.slice(0, 3)]),
     strategy: buildStrategy(a, b),
+    seconds: secondsFor(a, b),
   };
 }

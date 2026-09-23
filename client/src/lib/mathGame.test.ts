@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  HINT_BONUS_SECONDS,
   ROUND_LENGTH,
   buildStrategy,
   diagnose,
   makeQuestion,
+  secondsFor,
 } from "./mathGame";
 
 /** Every factor pair the demo can actually generate. */
@@ -132,6 +134,56 @@ describe("buildStrategy", () => {
     for (const [a, b] of ALL_PAIRS) {
       expect(buildStrategy(a, b).label.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("secondsFor", () => {
+  it("gives every fact enough time to read and think", () => {
+    // Reading the question plus four options takes several seconds before any
+    // thinking starts, so nothing should be tighter than 10s.
+    for (const [a, b] of ALL_PAIRS) {
+      expect(
+        secondsFor(a, b),
+        `${a} ${TIMES} ${b} is too tight`
+      ).toBeGreaterThanOrEqual(10);
+    }
+  });
+
+  it("allows more time for facts that need more steps", () => {
+    // One-step tricks.
+    expect(secondsFor(2, 7)).toBe(12);
+    expect(secondsFor(5, 8)).toBe(12);
+    expect(secondsFor(10, 4)).toBe(12);
+    // Single step, more to hold in mind.
+    expect(secondsFor(3, 7)).toBe(16);
+    expect(secondsFor(4, 8)).toBe(16);
+    expect(secondsFor(9, 6)).toBe(16);
+    // Needs decomposing into two easier facts.
+    expect(secondsFor(7, 8)).toBe(20);
+    expect(secondsFor(6, 6)).toBe(20);
+  });
+
+  it("is symmetric — order of the factors must not change the time", () => {
+    for (const [a, b] of ALL_PAIRS) {
+      expect(secondsFor(a, b), `${a} ${TIMES} ${b}`).toBe(secondsFor(b, a));
+    }
+  });
+
+  it("gives the hard tier strictly more time than the easy tier", () => {
+    expect(secondsFor(7, 8)).toBeGreaterThan(secondsFor(3, 7));
+    expect(secondsFor(3, 7)).toBeGreaterThan(secondsFor(2, 7));
+  });
+
+  it("matches the time attached to generated questions", () => {
+    for (let i = 0; i < 200; i++) {
+      const q = makeQuestion(i % ROUND_LENGTH);
+      expect(q.seconds).toBe(secondsFor(q.a, q.b));
+    }
+  });
+
+  it("offers a hint bonus worth taking", () => {
+    // A hint must buy enough time to actually read it and apply the strategy.
+    expect(HINT_BONUS_SECONDS).toBeGreaterThanOrEqual(5);
   });
 });
 

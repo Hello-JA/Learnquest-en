@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
+  HINT_BONUS_SECONDS,
   ROUND_LENGTH,
   diagnose,
   makeQuestion,
@@ -52,6 +53,13 @@ export default function Demo() {
   const [bestStreak, setBestStreak] = useState(0);
   const [missed, setMissed] = useState<MissedFact[]>([]);
 
+  // Countdown. Held as an absolute deadline rather than a decrementing number
+  // so the clock stays accurate if the tab is backgrounded.
+  const [deadline, setDeadline] = useState<number | null>(null);
+  const [msLeft, setMsLeft] = useState(0);
+  const [timedOut, setTimedOut] = useState(false);
+  const recordedTimeout = useRef(false);
+
   const start = () => {
     setPhase("playing");
     setIndex(0);
@@ -63,10 +71,12 @@ export default function Demo() {
     setStreak(0);
     setBestStreak(0);
     setMissed([]);
+    setTimedOut(false);
+    recordedTimeout.current = false;
   };
 
   const answer = (value: number) => {
-    if (chosen !== null) return;
+    if (chosen !== null || timedOut) return;
     setChosen(value);
 
     if (value === question.product) {
@@ -98,13 +108,66 @@ export default function Demo() {
     setChosen(null);
     setShowHint(false);
     setUsedHint(false);
+    setTimedOut(false);
+    recordedTimeout.current = false;
   };
 
+  // Start the clock for each new question.
+  useEffect(() => {
+    if (phase !== "playing") return;
+    const ms = question.seconds * 1000;
+    setDeadline(Date.now() + ms);
+    setMsLeft(ms);
+  }, [question, phase]);
+
+  // Tick while the question is unanswered. Stops the moment an answer is
+  // given, so nobody is ever rushed while reading the explanation.
+  useEffect(() => {
+    if (phase !== "playing" || chosen !== null || timedOut || deadline === null) {
+      return;
+    }
+    const id = setInterval(() => {
+      const remaining = deadline - Date.now();
+      if (remaining <= 0) {
+        setMsLeft(0);
+        setTimedOut(true);
+      } else {
+        setMsLeft(remaining);
+      }
+    }, 100);
+    return () => clearInterval(id);
+  }, [phase, chosen, timedOut, deadline]);
+
+  // Running out counts as a missed fact, recorded once.
+  useEffect(() => {
+    if (!timedOut || chosen !== null || recordedTimeout.current) return;
+    recordedTimeout.current = true;
+    setStreak(0);
+    setMissed((m) => [
+      ...m,
+      { a: question.a, b: question.b, strategy: question.strategy },
+    ]);
+  }, [timedOut, chosen, question]);
+
   const isAnswered = chosen !== null;
+  // Both an answer and a timeout freeze the question and reveal the reasoning.
+  const isResolved = isAnswered || timedOut;
   const isCorrect = chosen === question.product;
   const misconception =
     isAnswered && !isCorrect ? diagnose(chosen, question.a, question.b) : null;
   const correctCount = ROUND_LENGTH - missed.length;
+
+  const secondsLeft = Math.ceil(msLeft / 1000);
+  const timeFraction = Math.max(
+    0,
+    Math.min(1, msLeft / (question.seconds * 1000))
+  );
+  const timerTone =
+    timeFraction > 0.4
+      ? "bg-blue-600"
+      : timeFraction > 0.15
+        ? "bg-amber-500"
+        : "bg-red-500";
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -133,7 +196,7 @@ export default function Demo() {
                       {
                         icon: "💡",
                         title: "Hints, not answers",
-                        body: "Stuck? A hint points to the strategy and lets the child finish the thinking.",
+                        body: "Stuck? A hint points to the strategy, adds time to the clock, and lets the child finish the thinking.",
                       },
                       {
                         icon: "🧠",
@@ -171,6 +234,10 @@ export default function Demo() {
                       This demo runs entirely in your browser. Your answers are not
                       recorded, stored or sent anywhere.
                     </p>
+                    <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto">
+                      Each question has a gentle timer — longer for harder facts, and
+                      it stops as soon as you answer so nothing is rushed.
+                    </p>
                   </div>
                 </>
               )}
@@ -199,15 +266,48 @@ export default function Demo() {
                     <p className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
                       What is
                     </p>
-                    <p className="text-center text-6xl md:text-7xl font-extrabold text-gray-900 mb-8">
+                    <p className="text-center text-6xl md:text-7xl font-extrabold text-gray-900 mb-6">
                       {question.a} <span className="text-blue-600">×</span> {question.b}
                     </p>
+
+                    {/* Countdown. Freezes once the question is resolved, so the
+                        explanation is never read under time pressure. */}
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                          {isResolved ? "Time" : "Time to think"}
+                        </span>
+                        <span
+                          className={
+                            "text-sm font-bold tabular-nums " +
+                            (isResolved
+                              ? "text-gray-400"
+                              : timeFraction > 0.15
+                                ? "text-gray-600"
+                                : "text-red-600")
+                          }
+                        >
+                          {isResolved ? "—" : secondsLeft + "s"}
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className={
+                            "h-full rounded-full transition-[width] duration-100 ease-linear " +
+                            (isResolved ? "bg-gray-300" : timerTone)
+                          }
+                          style={{
+                            width: (isResolved ? 100 : timeFraction * 100) + "%",
+                          }}
+                        />
+                      </div>
+                    </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       {question.choices.map((choice) => {
                         let cls =
                           "bg-white border-2 border-gray-200 text-gray-900 hover:border-blue-600 hover:shadow-md";
-                        if (isAnswered) {
+                        if (isResolved) {
                           if (choice === question.product) {
                             cls = "bg-green-50 border-2 border-green-500 text-green-700";
                           } else if (choice === chosen) {
@@ -220,7 +320,7 @@ export default function Demo() {
                           <button
                             key={choice}
                             onClick={() => answer(choice)}
-                            disabled={isAnswered}
+                            disabled={isResolved}
                             className={`py-5 rounded-xl text-3xl font-bold transition-all ${cls}`}
                           >
                             {choice}
@@ -230,19 +330,23 @@ export default function Demo() {
                     </div>
 
                     {/* hint */}
-                    {!isAnswered && !showHint && (
+                    {!isResolved && !showHint && (
                       <button
                         onClick={() => {
                           setShowHint(true);
                           setUsedHint(true);
+                          // Reading a hint should never eat the clock.
+                          setDeadline((d) =>
+                            d === null ? d : d + HINT_BONUS_SECONDS * 1000
+                          );
                         }}
                         className="mt-6 w-full py-3 rounded-lg border border-orange-300 text-orange-600 font-semibold hover:bg-orange-50 transition"
                       >
-                        💡 Need a hint?
+                        💡 Need a hint? <span className="text-orange-400">(+{HINT_BONUS_SECONDS}s)</span>
                       </button>
                     )}
 
-                    {!isAnswered && showHint && (
+                    {!isResolved && showHint && (
                       <div className="mt-6 bg-orange-50 border border-orange-200 rounded-xl p-5">
                         <p className="text-xs font-bold uppercase tracking-wider text-orange-500 mb-2">
                           {question.strategy.label}
@@ -256,7 +360,7 @@ export default function Demo() {
                     )}
 
                     {/* feedback */}
-                    {isAnswered && (
+                    {isResolved && (
                       <div className="mt-6">
                         <div
                           className={`rounded-xl p-5 border ${
@@ -272,8 +376,17 @@ export default function Demo() {
                           >
                             {isCorrect
                               ? "✓ That is right!"
-                              : "Not quite — let us look at why"}
+                              : timedOut
+                                ? "⏱ Time is up — here is how it works"
+                                : "Not quite — let us look at why"}
                           </p>
+
+                          {timedOut && (
+                            <p className="text-amber-800 text-sm mb-3">
+                              No problem. Knowing the strategy is what makes these
+                              quick later on — speed comes last, not first.
+                            </p>
+                          )}
 
                           {misconception && (
                             <p className="text-amber-800 text-sm mb-3">{misconception}</p>
