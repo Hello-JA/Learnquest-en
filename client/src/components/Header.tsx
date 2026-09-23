@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { homeAnchor } from "@/lib/basePath";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Header() {
     } else {
       // Section lives on the home page — navigate there and let the browser
       // jump to the anchor (used when nav is clicked from /pricing).
-      window.location.href = `/#${id}`;
+      window.location.href = homeAnchor(id);
     }
   };
 

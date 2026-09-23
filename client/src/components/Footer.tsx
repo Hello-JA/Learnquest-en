@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { PRELAUNCH_NOTICE } from "@/lib/legal";
+import { homeAnchor } from "@/lib/basePath";
 
 export default function Footer() {
   return (
@@ -24,13 +25,13 @@ export default function Footer() {
             <Link href="/demo" className="hover:text-blue-400 transition-colors">
               Try Demo
             </Link>
-            <a href="/#features" className="hover:text-blue-400 transition-colors">
+            <a href={homeAnchor("features")} className="hover:text-blue-400 transition-colors">
               Features
             </a>
             <Link href="/pricing" className="hover:text-blue-400 transition-colors">
               Pricing
             </Link>
-            <a href="/#faq" className="hover:text-blue-400 transition-colors">
+            <a href={homeAnchor("faq")} className="hover:text-blue-400 transition-colors">
               FAQ
             </a>
             <Link href="/privacy" className="hover:text-blue-400 transition-colors">
