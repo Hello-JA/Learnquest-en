@@ -1,9 +1,8 @@
 /**
  * Shared shape for every demo subject.
  *
- * Multiplication questions are generated; reading and history
- * questions are authored. Both produce a Challenge so the demo page can render
- * them with one code path.
+ * Multiplication questions are generated; reading questions are authored. Both
+ * produce a Challenge so the demo page can render them with one code path.
  *
  * The teaching contract every subject must honour:
  *   - `hint` points at the method and must never contain the answer.
@@ -47,7 +46,7 @@ export type Challenge = {
   visual?: { rows: number; cols: number };
 };
 
-export type SubjectId = "math" | "reading" | "history";
+export type SubjectId = "math" | "reading";
 
 export type Subject = {
   id: SubjectId;
